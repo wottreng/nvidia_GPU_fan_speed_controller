@@ -9,8 +9,6 @@ from datetime import datetime
 
 # how often do you want to check the GPU, cant be '0'
 POLLING_TIME = 5  # seconds
-# global display, needed for systemd
-display_global = ""
 
 # --
 def get_gpu_temps(verbose: bool = False) -> int:
@@ -23,23 +21,15 @@ def get_gpu_temps(verbose: bool = False) -> int:
 
 # return desired fan speed % based on temp C
 def fan_curve_logarithm(gpu_temp: int) -> int:
-    if gpu_temp < 20:
-        return 10
-    elif gpu_temp < 30:
+    if gpu_temp < 30:
         return 15
-    elif gpu_temp < 35:
-        return 20
     elif gpu_temp < 40:
-        return 30
-    elif gpu_temp < 45:
         return 40
-    elif gpu_temp < 50:
-        return 55
-    elif gpu_temp < 55:
-        return 65
     elif gpu_temp < 60:
-        return 80
+        return 65
     elif gpu_temp < 70:
+        return 80
+    elif gpu_temp < 80:
         return 90
     else:
         return 100
@@ -58,7 +48,6 @@ def set_gpu_fan_speed(_display:str, fan_speed: int = 30,):
         # print("[!] ERROR [!] could not assign fan speed!")
         return False
 
-
 def return_gpu_information(verbose:bool=False) -> str:
     output = subprocess.check_output("nvidia-smi").decode("utf-8")
     if verbose: print(output)
@@ -73,9 +62,17 @@ def get_display()->str:
 def log_to_ram(data:str):
     date = datetime.now()
     time_format = date.strftime("%H:%M:%S")
-    with open("/tmp/gpu_fan_control.log", "a") as file:
+    date_format = date.strftime("%d-%b-%Y")  # new log file per day
+    with open(f"/tmp/gpu_fan_control_{date_format}.log", "a") as file:
         file.write(f"{time_format}: {data}\n")
 
+# stop fan flutter by temp toggling up and down between control steps
+def check_difference_in_temp(old_temp:int,new_temp:int)->bool:
+    DIFF = 3
+    if abs(new_temp-old_temp) > DIFF:
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     log_to_ram("[*] gpu fan control started [*]")
@@ -87,7 +84,7 @@ if __name__ == '__main__':
     while True:
         # --
         gpu_temp_new = get_gpu_temps()
-        if gpu_temp_new != gpu_temp:
+        if check_difference_in_temp(gpu_temp, gpu_temp_new):
             gpu_temp = gpu_temp_new
             log_to_ram(f"gpu_temp: {gpu_temp}")
             # --
