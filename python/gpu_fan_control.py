@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 run with systemd to constantly monitor GPU and control fan speed
-see systemd folder for service file
 '''
 import os
 import subprocess
@@ -10,6 +9,8 @@ from datetime import datetime
 
 # how often do you want to check the GPU, cant be '0'
 POLLING_TIME = 5  # seconds
+# global display, needed for systemd
+display_global = ""
 
 # --
 def get_gpu_temps(verbose: bool = False) -> int:
@@ -28,25 +29,33 @@ def fan_curve_logarithm(gpu_temp: int) -> int:
         return 15
     elif gpu_temp < 35:
         return 20
-    elif gpu_temp < 45:
+    elif gpu_temp < 40:
         return 30
+    elif gpu_temp < 45:
+        return 40
+    elif gpu_temp < 50:
+        return 55
     elif gpu_temp < 55:
-        return 50
-    elif gpu_temp < 65:
+        return 65
+    elif gpu_temp < 60:
         return 80
+    elif gpu_temp < 70:
+        return 90
     else:
         return 100
 
 
 # input fan speed in %
-def set_gpu_fan_speed(fan_speed: int = 30):
-    output = subprocess.run(["nvidia-settings", "-a", f"[fan:0]/GPUTargetFanSpeed={fan_speed}"],
-                   capture_output=True,
-                   text=True)
-    if f"assigned value {fan_speed}" in output.stdout:
+def set_gpu_fan_speed(_display:str, fan_speed: int = 30,):
+    output = os.popen(
+        f"DISPLAY=:{_display.split(':')[1]} XAUTHORITY={_display} nvidia-settings -a [fan:0]/GPUTargetFanSpeed={fan_speed}").read()
+    if f"assigned value {fan_speed}" in output:
+        log_to_ram("fan set success")
         return True
     else:
-        print("[!] ERROR [!] could not assign fan speed!")
+        log_to_ram(output)
+        log_to_ram("[!] ERROR [!] could not assign fan speed!")
+        # print("[!] ERROR [!] could not assign fan speed!")
         return False
 
 
@@ -55,6 +64,10 @@ def return_gpu_information(verbose:bool=False) -> str:
     if verbose: print(output)
     return output
 
+def get_display()->str:
+    output = os.popen("ps a | grep X").readlines()
+    _display = output[0].split("-auth ")[1].split(" ")[0]
+    return _display
 
 # log outputs to temporary memory
 def log_to_ram(data:str):
@@ -66,6 +79,9 @@ def log_to_ram(data:str):
 
 if __name__ == '__main__':
     log_to_ram("[*] gpu fan control started [*]")
+    # get X server
+    display_global = get_display()
+    #
     fan_speed = 100
     gpu_temp = 100
     while True:
@@ -74,12 +90,13 @@ if __name__ == '__main__':
         if gpu_temp_new != gpu_temp:
             gpu_temp = gpu_temp_new
             log_to_ram(f"gpu_temp: {gpu_temp}")
-        # --
-        fan_speed_new = fan_curve_logarithm(gpu_temp)
-        if fan_speed_new != fan_speed:
-            fan_speed = fan_speed_new
-            log_to_ram(f"fan speed requested: {fan_speed}%")
-            set_gpu_fan_speed(fan_speed)
+            # --
+            fan_speed_new = fan_curve_logarithm(gpu_temp)
+            if fan_speed_new != fan_speed:
+                fan_speed = fan_speed_new
+                log_to_ram(f"fan speed requested: {fan_speed}%")
+                set_gpu_fan_speed(display_global, fan_speed)
         # --
         time.sleep(POLLING_TIME)
+
 
