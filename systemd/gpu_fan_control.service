@@ -1,0 +1,14 @@
+[Unit]
+Description= gpu monitor and fan control service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory = /root
+
+ExecStart=/bin/gpu_fan_control.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
