@@ -11,6 +11,8 @@ monitor GPU temps and control GPU fan
 * check log file in `/tmp` folder
 
 
-NOTES: you NEED to enable manual fan control in your NVIDIA settings: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
+NOTES: 
+* you NEED to enable manual fan control in your NVIDIA settings: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
+* tested on Linux Mint 20.3 Cinnamon, kernel: 5.13, nvidia driver: 470.103.01
 
 Cheers, Mark
