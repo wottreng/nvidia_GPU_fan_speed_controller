@@ -11,6 +11,6 @@ monitor GPU temps and control GPU fan
 * check log file: `cat /tmp/gpu_fan_control.log`
 
 
-NOTES: you may need to enable manual fan control in your NVIDIA settings: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
+NOTES: you NEED to enable manual fan control in your NVIDIA settings: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
 
 Cheers, Mark
