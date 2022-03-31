@@ -14,6 +14,9 @@ chmod 777 /tmp/nvidia_GPU_fan_controller-main/python/gpu_fan_control.py
 printf "\033[0;32m [*] moved gpu_fan_control.py into system /bin for execution \n \033[0m"
 printf "\033[0;31m [!] root privilege needed \n \033[0m"
 sudo mv /tmp/nvidia_GPU_fan_controller-main/python/gpu_fan_control.py /bin/
+# set fan control to ON
+printf "\033[0;32m [*] set nvidia fan control to ON \n \033[0m"
+nvidia-settings -a [gpu:0]/GPUFanControlState=1
 # -----
 # add systemd service file
 printf "\033[0;32m [*] add service file to systemd \n \033[0m"
