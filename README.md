@@ -18,8 +18,10 @@ NOTE: see `install.sh` for all commmands needed!
 * start fan control service: `sudo systemctl start gpu_fan_control.service`
 * check log file in `/tmp` folder
 
+## Optional Configuration
+you can modify temp to fan speed curve in the `fan_curve_algorithm` function
 
-NOTES: 
+## NOTES: 
 * you NEED to enable manual fan control in your NVIDIA settings: 
   * GUI: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
   * CLI: `nvidia-settings -a [gpu:0]/GPUFanControlState=1`
@@ -27,3 +29,5 @@ NOTES:
 * rust version added if you rather go that route
 
 Cheers, Mark
+
+<a href=" https://www.buymeacoffee.com/wottreng" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
