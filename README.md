@@ -24,5 +24,6 @@ NOTES:
   * GUI: `nvidia-settings` then Thermal Settings then check Enable GPU Fan Settings
   * CLI: `nvidia-settings -a [gpu:0]/GPUFanControlState=1`
 * tested on Linux Mint 20.3 Cinnamon, kernel: 5.13, nvidia driver: 470.103.01
+* rust version added if you rather go that route
 
 Cheers, Mark
