@@ -20,7 +20,7 @@ def get_gpu_temps(verbose: bool = False) -> int:
 
 
 # return desired fan speed % based on temp C
-def fan_curve_logarithm(gpu_temp: int) -> int:
+def fan_curve_algorithm(gpu_temp: int) -> int:
     if gpu_temp < 30:
         return 15
     elif gpu_temp < 40:
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             gpu_temp = gpu_temp_new
             log_to_ram(f"gpu_temp: {gpu_temp}")
             # --
-            fan_speed_new = fan_curve_logarithm(gpu_temp)
+            fan_speed_new = fan_curve_algorithm(gpu_temp)
             if fan_speed_new != fan_speed:
                 fan_speed = fan_speed_new
                 log_to_ram(f"fan speed requested: {fan_speed}%")
