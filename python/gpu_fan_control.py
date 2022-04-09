@@ -78,6 +78,8 @@ if __name__ == '__main__':
     log_to_ram("[*] gpu fan control started [*]")
     # get X server
     display_global = get_display()
+    # set control of fan speed in nvidia settings:
+    os.system(f"DISPLAY=:{display_global.split(':')[1]} XAUTHORITY={display_global} nvidia-settings -a [gpu:0]/GPUFanControlState=1")
     #
     fan_speed = 100
     gpu_temp = 100
