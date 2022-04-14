@@ -1,5 +1,5 @@
 # nvidia_GPU_fan_controller
-monitor GPU temps and control GPU fan
+monitor GPU temps and control GPU fan speeds
 
 ## TLDR cli magic:
 copy and paste into your cmd line for installation
