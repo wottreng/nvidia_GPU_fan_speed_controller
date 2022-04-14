@@ -1,4 +1,4 @@
-# nvidia_GPU_fan_controller
+# nvidia_GPU_fan_speed_controller
 monitor GPU temps and control GPU fan speeds
 
 ## TLDR cli magic:
