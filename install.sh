@@ -30,8 +30,7 @@ sudo systemctl enable gpu_fan_control.service
 sudo systemctl start gpu_fan_control.service
 # check if it is working
 printf "\033[0;32m [*] lets check systemd to make sure its working... \n \033[0m"
-printf "\033[0;31m [!] root privilege needed \n \033[0m"
-sudo systemctl status gpu_fan_control.service
+systemctl status gpu_fan_control.service
 #
 printf "\033[0;32m [*] Cheers! \n \033[0m"
 
